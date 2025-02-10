@@ -111,6 +111,38 @@ fun generateSudokuGrid(): List<Int> {
     return firstRow + List(72) { 0 }
 }
 
-fun isSudokuComplete(grid: List<Int>): Boolean {
-    return grid.none { it == 0 }
+//fun isSudokuComplete(grid: List<Int>): Boolean {
+//    return grid.none { it == 0 }
+//}
+
+ fun isSudokuComplete(grid: List<Int>): Boolean {
+    val size = 9
+    val validSet = (1..9).toSet()
+
+    // Check rows
+    for (i in 0 until size) {
+        val rowSet = grid.subList(i * size, (i + 1) * size).toSet()
+        if (rowSet != validSet) return false
+    }
+
+    // Check columns
+    for (i in 0 until size) {
+        val columnSet = (0 until size).map { grid[it * size + i] }.toSet()
+        if (columnSet != validSet) return false
+    }
+
+    // Check 3x3 blocks
+    for (row in 0 until size step 3) {
+        for (col in 0 until size step 3) {
+            val blockSet = mutableSetOf<Int>()
+            for (r in 0 until 3) {
+                for (c in 0 until 3) {
+                    blockSet.add(grid[(row + r) * size + (col + c)])
+                }
+            }
+            if (blockSet != validSet) return false
+        }
+    }
+
+    return true
 }
